@@ -1,0 +1,100 @@
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Scanner;
+
+/**
+ * @author Kendra Driver
+ * Java 202 
+ * Assignment 4
+ */
+
+public class Assignment4<E>{
+    double found = 0;
+    double notFound = 0;
+ 
+    public void assignment4() {
+        MyLinkedList[] dictionaryList = new MyLinkedList[26];
+
+        try {
+            FileInputStream inf = new FileInputStream(new File("random_dictionary.txt"));//reading the dictonary text
+            char let;
+            String word = ""; //word to be processed
+            int n = 0;
+            while ((n = inf.read()) != -1) {
+                let = (char) n;
+                if (Character.isLetter(let)) {
+                    word += Character.toLowerCase(let);
+                }
+                if ((Character.isWhitespace(let) || let == '-') && !word.isEmpty()) {
+                    if (dictionaryList[word.charAt(0) - 97] == null) {
+                        dictionaryList[word.charAt(0) - 97] = new MyLinkedList();
+                        dictionaryList[word.charAt(0) - 97].add(word);
+                    } else {
+                        dictionaryList[word.charAt(0) - 97].add(word);
+                    }//else
+                    word = "";
+                }//if
+            }//while 
+
+            inf.close();
+            
+            
+            FileInputStream olive = new FileInputStream(new File("oliver.txt"));//inputting the Oliver text
+            while ((n = olive.read()) != -1) {
+                let = (char) n;
+
+                if (Character.isLetter(let)) {
+                    word += Character.toLowerCase(let);
+                }//if character 
+
+                if ((Character.isWhitespace(let) || let == '-') && !word.isEmpty()) {
+                    if (dictionaryList[word.charAt(0) - 97].contains(word)){
+                        found++;
+                    } else {
+                        notFound++;
+                    }//else
+                    word = "";
+                }//if
+            }//while 
+            olive.close();
+        }//try             
+        catch (IOException e) {e.printStackTrace();}
+       
+        }//bringInDictionary
+
+    
+    /**
+     * @param args the command line arguments
+     *
+     */
+    public static void main(String[] args) {
+        Assignment4 run = new Assignment4();
+
+        run.assignment4();
+        
+        System.out.println("Found = " + run.found);
+        System.out.println("Not Found = " + run.notFound);
+        double foundw = run.found;
+        //System.out.println("foundw = " + foundw);
+        double notfound = run.notFound;
+        //System.out.println("notfound = " + notfound);
+        
+        
+        
+               
+        double total = foundw + notfound;
+        System.out.println("Total = " + total);
+        
+        double comWdFnd =  foundw / total;
+        double comWdNtFnd =  notfound / total;
+        
+        System.out.println("Comparisons for words found = " +  comWdFnd);
+        System.out.println("Comparisons for words not found = " + comWdNtFnd);
+        System.out.println("Average comparisons for words found = " + comWdFnd/foundw);
+        System.out.println("Average comparisons for words not found = " + comWdNtFnd/notfound);
+
+    }//main
+    
+}//class
